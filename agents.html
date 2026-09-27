@@ -25,6 +25,11 @@
   AI 管家小潼可点击对话（快捷问题 + 关键词应答）；手机端优先、桌面端增强。
   单文件零外链：双击可开、微信可直发。
   ============================================================
+  v3.29（20260927）UX 走查修复批：
+  ① hero 副标体现「AI 商城」大定位（智能体/数字员工/AI硬件/AI课程，不止智能体商城/数字员工/助手）
+  ② hero 副标下加算力换算微注（1 元 = 10 算力 · 0 元开通 · 用后扣费 · 失败不扣）
+  ③ 新手帮助弹层 helpMask（术语词典：算力/积分旧称/访谈/简报/0元开通·用后扣费/交付才扣/失败不扣费/赠送算力）
+     入口：meView「❓ 新手帮助」+ hero-cta「❓ 新手帮助」+ 充值弹层「❓ 什么是算力？」
 -->
 <style>
 :root{
@@ -155,6 +160,11 @@ input{font-family:inherit;color:inherit}
 .hero-type{font-size:12.5px;color:rgba(255,255,255,.92);min-height:20px}
 .hero-type b{color:#FFE9B8;font-weight:600}
 .hero-slogan{margin-top:9px;font-size:11px;color:rgba(255,255,255,.95);background:rgba(255,255,255,.16);display:inline-block;padding:5px 11px;border-radius:99px;letter-spacing:.5px}
+.hero-note{margin-top:9px;font-size:10.5px;color:rgba(255,255,255,.72);letter-spacing:.3px}
+.help-list{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px}
+.help-item{background:#FFF9F1;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:left}
+.help-item b{font-size:13px;color:var(--ink)}
+.help-item span{font-size:12px;color:var(--sub);line-height:1.55}
 .caret{display:inline-block;width:7px;height:14px;background:#FFF;vertical-align:-2px;margin-left:2px;animation:blink .8s step-end infinite}
 @keyframes blink{50%{opacity:0}}
 .hero-cta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
@@ -190,10 +200,11 @@ input{font-family:inherit;color:inherit}
 .ad-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .ad-track::-webkit-scrollbar{display:none}
 .ad-slide{flex:0 0 100%;scroll-snap-align:start;height:92px;display:grid;place-items:center}
-.ad-slot{font-size:12px;color:#C9BFB2;letter-spacing:2px;border:1.5px dashed #E3D9CB;border-radius:12px;padding:14px 26px}
-.ad-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px}
-.ad-dots i{width:5px;height:5px;border-radius:50%;background:#E0D6C8;transition:all .3s}
-.ad-dots i.on{width:14px;border-radius:3px;background:#F25300}
+.ad-inv{width:calc(100% - 16px);height:76px;border-radius:12px;border:0;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#FF8C32,#F25300 60%,#E84B00);color:#fff;text-align:left;box-shadow:0 6px 16px rgba(242,83,0,.25)}
+.ad-inv-txt b{display:block;font-size:15.5px;font-weight:800}
+.ad-inv-txt small{display:block;font-size:11px;opacity:.92;margin-top:2px}
+.ad-inv-go{flex:none;font-size:12px;font-weight:700;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:15px;padding:6px 12px;white-space:nowrap}
+.ad-inv:active{transform:scale(.97)}
 .kingkong{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:16px}
 .kk{
   position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 4px 10px;border-radius:15px;
@@ -301,6 +312,7 @@ input{font-family:inherit;color:inherit}
 }
 .emp-buy{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
 @media(min-width:960px){.emp-buy{flex-direction:row;align-items:center;justify-content:space-between;margin-top:auto}}
+.emp-buy{display:none}
 .emp-soon{font-size:11px;color:var(--amber);padding:5px 10px;border-radius:8px;background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.3);white-space:nowrap}
 .emp.spotlight{border-color:var(--orange) !important;box-shadow:0 0 0 3px rgba(255,122,26,.35), 0 0 30px rgba(255,106,0,.5) !important}
 .divider{display:flex;align-items:center;gap:12px;margin:16px 0 12px;font-size:11px;color:var(--amber);letter-spacing:2px}
@@ -415,6 +427,8 @@ input{font-family:inherit;color:inherit}
 /* ---- 购物车 · 独立页面（京东式） ---- */
 .cart-view{padding-bottom:calc(178px + env(safe-area-inset-bottom))}
 @media(min-width:960px){.cart-view{padding-bottom:132px}}
+.me-view{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+@media(min-width:960px){.me-view{padding-bottom:40px}}
 .cart-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;border:1px solid var(--line);background:var(--card);margin-bottom:9px}
 .ci-ava{width:44px;height:44px;border-radius:12px;object-fit:cover;flex:none}
 .ci-main{flex:1;min-width:0}
@@ -461,6 +475,37 @@ input{font-family:inherit;color:inherit}
 .inv-code b{color:#F25300;letter-spacing:1px}
 .inv-rules p{font-size:12.5px;color:var(--sub);line-height:1.7;margin:9px 0}
 .inv-rules b{color:var(--ink)}
+/* 邀请有礼 · 海报式 */
+.inv-poster{margin:14px 0 12px;border-radius:18px;overflow:hidden;background:linear-gradient(160deg,#FF7A1A,#FF5E00 55%,#E84B00);color:#fff;box-shadow:0 10px 26px rgba(232,75,0,.28)}
+.ip-brand{padding:12px 16px 0;font-size:11.5px;font-weight:700;letter-spacing:.5px;opacity:.92}
+.ip-title{padding:6px 16px 0;font-size:22px;font-weight:800;line-height:1.3}
+.ip-title b{display:block;font-size:26px}
+.ip-rewards{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px 16px 0}
+.ip-rewards>div{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:10px 8px;text-align:center}
+.ip-rewards b{display:block;font-size:21px;font-weight:800;line-height:1.15}
+.ip-rewards span{display:block;font-size:10.5px;opacity:.92;margin-top:3px}
+.ip-bottom{display:flex;align-items:center;gap:12px;margin:14px 12px 0;padding:12px;border-radius:14px 14px 0 0;background:#FFF9F2;color:var(--ink)}
+.ip-qr{width:84px;height:84px;flex:none;border-radius:10px;background:#fff;padding:5px;border:1px solid rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(21,1fr);grid-template-rows:repeat(21,1fr)}
+.ip-qr i{display:block}
+.ip-qr i.f{background:#111}
+.ip-code{min-width:0}
+.ip-code small{display:block;font-size:10.5px;color:var(--sub)}
+.ip-code b{display:block;font-size:19px;font-weight:800;color:#F25300;letter-spacing:1.5px;margin:2px 0}
+.ip-code em{display:block;font-size:10.5px;color:var(--sub);font-style:normal}
+.ip-foot{padding:10px 16px 13px;font-size:10px;opacity:.85}
+.inv-btns{display:flex;gap:10px;margin-bottom:12px}
+.inv-btns .big-btn{flex:1.4}
+.inv-btns .ghost-btn{flex:1}
+/* 算力明细 */
+.bill-list{max-height:46vh;overflow:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;background:#FFFCF7}
+.bill-item{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px dashed var(--line);font-size:12.5px}
+.bill-item:last-child{border-bottom:0}
+.bill-item .bi-main{min-width:0;flex:1}
+.bill-item .bi-name{color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bill-item .bi-time{color:var(--dim);font-size:10.5px;margin-top:2px}
+.bill-item .bi-v{flex:none;font-weight:800;font-size:13px}
+.bill-item .bi-v.plus{color:#0E9F6E}
+.bill-item .bi-v.minus{color:#F25300}
 .buy-row{display:inline-flex;gap:6px;align-items:center}
 .cart-mini{min-width:30px;height:30px;padding:0 8px;border-radius:9px;border:1px solid rgba(255,122,26,.45);background:#FFF3E4;color:#C25A00;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:3px;justify-content:center}
 .buy-now{min-width:76px;height:30px;padding:0 10px;border-radius:9px;border:0;background:linear-gradient(135deg,#FF8C32,#F25300);color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;box-shadow:0 2px 8px rgba(242,83,0,.25)}
@@ -475,6 +520,40 @@ input{font-family:inherit;color:inherit}
 .cases-view.show{display:block;animation:cvIn .3s ease}
 @keyframes cvIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media(min-width:960px){.cases-view{left:190px}}
+/* 注册 / 登录页（全屏，盖过 TabBar） */
+.auth-view{z-index:110;padding:0;text-align:center}
+.auth-view.show{display:flex;animation:cvIn .3s ease}
+.auth-inner{width:100%;max-width:400px;margin:auto;padding:32px 24px calc(30px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center}
+.auth-skip{position:absolute;top:14px;right:14px;min-height:34px;padding:0 13px;border-radius:17px;border:1px solid var(--line);background:#fff;color:var(--sub);font-size:12px;font-weight:600}
+.auth-brand{display:flex;flex-direction:column;align-items:center;gap:7px;margin-bottom:18px}
+.auth-logo{width:64px;height:64px;border-radius:19px;display:grid;place-items:center;font-size:30px;font-style:normal;background:linear-gradient(135deg,#FF8C32,#F25300);color:#fff;box-shadow:0 10px 24px rgba(242,83,0,.3)}
+.auth-brand b{font-size:22px;font-weight:900;color:var(--ink)}
+.auth-brand small{font-size:12px;color:var(--sub)}
+.auth-inv{width:100%;box-sizing:border-box;padding:11px 14px;border-radius:13px;background:rgba(255,122,26,.1);border:1.5px dashed rgba(242,83,0,.45);color:#C25A00;font-size:12.5px;font-weight:600;margin-bottom:14px}
+.auth-inv b{color:#F25300}
+.auth-inv small{display:block;font-size:11px;margin-top:2px;letter-spacing:1px}
+.auth-card{width:100%;display:flex;flex-direction:column;gap:11px}
+.auth-wx{min-height:48px;border-radius:14px;border:0;background:#07C160;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(7,193,96,.3)}
+.auth-wx i{font-style:normal;font-size:17px}
+.auth-wx:active{transform:scale(.97)}
+.auth-wx[disabled]{opacity:.6}
+.auth-or{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:11px;margin:2px 0}
+.auth-or:before,.auth-or:after{content:"";flex:1;height:1px;background:var(--line)}
+.auth-row{display:flex;gap:9px}
+.auth-row input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radius:13px;border:1.5px solid var(--line);background:#fff;font-size:14px;color:var(--ink);outline:none}
+.auth-row input:focus{border-color:#F25300}
+.auth-row input::placeholder{color:var(--dim)}
+.auth-sms-btn{flex:none;min-width:104px;min-height:46px;border-radius:13px;border:1.5px solid rgba(242,83,0,.45);background:rgba(255,122,26,.08);color:#C25A00;font-size:12.5px;font-weight:700;padding:0 10px}
+.auth-sms-btn[disabled]{opacity:.5}
+.auth-go{min-height:48px;border-radius:14px;border:0;background:linear-gradient(135deg,#FF8C32,#F25300);color:#fff;font-size:15px;font-weight:800;box-shadow:0 6px 16px rgba(242,83,0,.28)}
+.auth-go:active{transform:scale(.98)}
+.auth-agree{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--sub);text-align:left;line-height:1.5;margin-top:2px}
+.auth-agree input{margin-top:2px;accent-color:#F25300}
+.auth-agree em{color:#C25A00;font-style:normal}
+.auth-inv-row{width:100%;margin-top:11px}
+.auth-inv-row input{width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border-radius:13px;border:1.5px dashed rgba(242,83,0,.4);background:rgba(255,122,26,.05);font-size:13.5px;color:var(--ink);outline:none;text-align:center;letter-spacing:2px}
+.auth-foot{font-size:10.5px;color:var(--dim);line-height:1.7;margin-top:16px}
+@media(min-width:960px){.auth-view{left:0}}
 .cv-head{position:sticky;top:0;z-index:6;padding:15px 16px 0;
   background:rgba(255,252,247,.93);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--line)}
@@ -584,6 +663,8 @@ input{font-family:inherit;color:inherit}
 .chat-input input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid var(--line2);background:#FFFFFF;padding:0 13px;font-size:16px;outline:0}
 .chat-input input:focus{border-color:rgba(255,140,50,.55)}
 .chat-send{min-height:42px;padding:0 18px;border-radius:12px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#FF8A2A,#F25300)}
+.chat-go{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border-radius:17px;border:1.5px solid rgba(242,83,0,.4);background:linear-gradient(135deg,#FF8C32,#F25300);color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 4px 10px rgba(242,83,0,.22)}
+.chat-go:active{transform:scale(.96)}
 .me-bubble{display:none;margin-top:10px;align-items:flex-start;justify-content:flex-end;gap:9px}
 .me-bubble .bubble{border-radius:14px 4px 14px 14px;background:rgba(255,122,26,.12);border-color:rgba(255,122,26,.35)}
 
@@ -647,6 +728,17 @@ input{font-family:inherit;color:inherit}
 .cp-tag{font-size:10px;color:var(--cyan)}
 .cp-step{margin-left:auto;font-size:10px;color:var(--dim)}
 .cp-text{margin-top:11px;font-size:13px;color:var(--ink);min-height:44px;line-height:1.65}
+.cp-menu{border:none;background:rgba(200,150,100,.14);color:var(--sub);font-size:11px;padding:5px 10px;border-radius:999px;cursor:pointer}
+.cp-menu:active{transform:scale(.94)}
+.cp-courses{margin-top:11px;display:none}
+.cp-course-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:rgba(255,122,26,.06);border:1px solid rgba(255,122,26,.16);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.cp-course-item:hover{background:rgba(255,122,26,.12)}
+.cp-course-item:active{transform:scale(.985)}
+.cp-course-item .ci-ico{font-size:20px;width:26px;text-align:center;flex:none}
+.cp-course-item .ci-main{flex:1;min-width:0}
+.cp-course-item .ci-main b{display:block;font-size:13px;color:var(--ink)}
+.cp-course-item .ci-main small{font-size:10.5px;color:var(--dim)}
+.cp-course-item .ci-check{font-size:12px;color:#12b76a;font-weight:700;flex:none}
 .cp-text .caret{height:13px;background:var(--orange)}
 .cp-btns{display:flex;align-items:center;gap:10px;margin-top:13px}
 .cp-skip{font-size:12px;color:var(--dim);padding:9px 6px;min-height:38px}
@@ -668,6 +760,7 @@ input{font-family:inherit;color:inherit}
   transition:transform .25s,border .25s,box-shadow .25s;
 }
 @media(hover:hover){.pcard:hover{transform:translateY(-3px);border-color:rgba(255,122,26,.5);box-shadow:0 10px 28px rgba(170,90,20,.14)}}
+.pcard-link{cursor:pointer}
 .pcover{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#FFF2E2}
 .pcover-ico{display:grid;place-items:center;font-size:46px;background:linear-gradient(140deg,#FFE8D2,#FFD9B8)}
 .cimg{width:100%;height:100%;object-fit:cover;display:block}
@@ -742,13 +835,14 @@ input{font-family:inherit;color:inherit}
         <div class="hero-tag"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span> AI 值班中 · 点左边头像，随时问小潼</div>
         <h1 class="hero-title">你好，我是 AI 管家<em>小潼</em></h1>
         <div class="hero-type"><span id="heroType"></span><span class="caret"></span></div>
-        <div class="hero-slogan">⭐ AI 相关的这里都有</div>
+        <div class="hero-slogan">⭐ AI 商城 · 智能体 / 数字员工 / AI硬件 / AI课程，一站配齐</div>
       </div>
     </div>
     <div class="hero-cta">
       <button class="big-btn" id="startTodayBtn">🧧 免费开通 · 立送 100 算力</button>
-      <button class="ghost-btn" id="browseAllBtn">随便挑一位员工</button>
+      <button class="ghost-btn" id="heroHelpBtn">❓ 新手帮助</button>
     </div>
+    <div class="hero-note">⚡ 计费口径：1 元 = 10 算力 · 0 元开通 · 用后扣费 · 失败不扣</div>
   </section>
 
   <!-- 搜索 -->
@@ -762,14 +856,16 @@ input{font-family:inherit;color:inherit}
     <div id="result-count">“<b id="rc-word"></b>” 的搜索结果 · <b id="rc-num">0</b> 个智能体</div>
   </div>
 
-  <!-- 广告轮播（内容待接） -->
+  <!-- 广告位（当前仅邀约有礼） -->
   <div class="ad-banner rv" id="adBanner" aria-label="广告位">
     <div class="ad-track" id="adTrack">
-      <div class="ad-slide"><span class="ad-slot">广告位 · 虚位以待</span></div>
-      <div class="ad-slide"><span class="ad-slot">广告位 · 虚位以待</span></div>
-      <div class="ad-slide"><span class="ad-slot">广告位 · 虚位以待</span></div>
+      <div class="ad-slide">
+        <button class="ad-inv" id="adInvBtn" aria-label="邀请有礼活动">
+          <span class="ad-inv-txt"><b>🎁 邀请有礼</b><small>好友开通 · 各得 100 算力</small></span>
+          <span class="ad-inv-go">立即邀请 ›</span>
+        </button>
+      </div>
     </div>
-    <div class="ad-dots" id="adDots"><i class="on"></i><i></i><i></i></div>
   </div>
 
   <!-- 金刚区 -->
@@ -832,7 +928,7 @@ input{font-family:inherit;color:inherit}
         <div class="pbody">
           <div class="pname">AI 录音卡<span class="ptag">硬件新品</span></div>
           <p class="pdesc">录音即分析，自动转经营动作：客户沟通自动归档、话术要点自动提炼。</p>
-          <div class="pfoot"><span class="pprice">¥199 /台 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="hwRec" data-name="AI 录音卡" data-ppu="199" data-unit="硬件" data-per="/台" data-img="hwRec" data-cur="cny">🛒 加购</button><button class="buy-now" data-buy-product="hwRec" data-name="AI 录音卡" data-ppu="199" data-unit="硬件" data-per="/台" data-img="hwRec" data-cur="cny">立即购买</button></span></div>
+          <div class="pfoot"><span class="pprice">¥199 /台 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="hwRec" data-name="AI 录音卡" data-ppu="199" data-unit="硬件" data-per="/台" data-img="hwRec" data-cur="cny">🛒 加购</button></span></div>
         </div>
       </div>
       <div class="pcard rv">
@@ -840,7 +936,7 @@ input{font-family:inherit;color:inherit}
         <div class="pbody">
           <div class="pname">门店 AI 机器人<span class="ptag">硬件新品</span></div>
           <p class="pdesc">迎宾接待、导购问答，常用话术语音随叫随到，前台接待不冷场。</p>
-          <div class="pfoot"><span class="pprice">¥1,999 /台 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="hwRobot" data-name="门店 AI 机器人" data-ppu="1999" data-unit="硬件" data-per="/台" data-img="hwRobot" data-cur="cny">🛒 加购</button><button class="buy-now" data-buy-product="hwRobot" data-name="门店 AI 机器人" data-ppu="1999" data-unit="硬件" data-per="/台" data-img="hwRobot" data-cur="cny">立即购买</button></span></div>
+          <div class="pfoot"><span class="pprice">¥1,999 /台 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="hwRobot" data-name="门店 AI 机器人" data-ppu="1999" data-unit="硬件" data-per="/台" data-img="hwRobot" data-cur="cny">🛒 加购</button></span></div>
         </div>
       </div>
     </div>
@@ -855,7 +951,7 @@ input{font-family:inherit;color:inherit}
         <div class="pbody">
           <div class="pname">智能体开发课<span class="ptag">视频课</span></div>
           <p class="pdesc">从 0 到 1 学会搭建自己的智能体工作流。</p>
-          <div class="pfoot"><span class="pprice">¥199 /门 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="courseAgent" data-name="智能体开发课" data-ppu="199" data-unit="视频课" data-per="/门" data-img="courseAgent" data-cur="cny">🛒 加购</button><button class="buy-now" data-buy-product="courseAgent" data-name="智能体开发课" data-ppu="199" data-unit="视频课" data-per="/门" data-img="courseAgent" data-cur="cny">立即购买</button></span></div>
+          <div class="pfoot"><span class="pprice">¥199 /门 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="courseAgent" data-name="智能体开发课" data-ppu="199" data-unit="视频课" data-per="/门" data-img="courseAgent" data-cur="cny">🛒 加购</button></span></div>
         </div>
       </div>
       <div class="pcard rv">
@@ -863,7 +959,7 @@ input{font-family:inherit;color:inherit}
         <div class="pbody">
           <div class="pname">WorkBuddy 办公提效课<span class="ptag">实操课</span></div>
           <p class="pdesc">用 AI 把日报、周报、方案、表格这些日常活干得更快，即学即用。</p>
-          <div class="pfoot"><span class="pprice">¥99 /门 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="courseWb" data-name="WorkBuddy 办公提效课" data-ppu="99" data-unit="视频课" data-per="/门" data-img="courseWb" data-cur="cny">🛒 加购</button><button class="buy-now" data-buy-product="courseWb" data-name="WorkBuddy 办公提效课" data-ppu="99" data-unit="视频课" data-per="/门" data-img="courseWb" data-cur="cny">立即购买</button></span></div>
+          <div class="pfoot"><span class="pprice">¥99 /门 · 人民币直购</span><span class="buy-row"><button class="cart-mini" data-cart-product="courseWb" data-name="WorkBuddy 办公提效课" data-ppu="99" data-unit="视频课" data-per="/门" data-img="courseWb" data-cur="cny">🛒 加购</button></span></div>
         </div>
       </div>
     </div>
@@ -879,6 +975,7 @@ input{font-family:inherit;color:inherit}
           <div class="pname">大模型折扣仓<span class="ptag">OPC</span></div>
           <p class="pdesc">主流大模型 API 额度折扣直充，token 按仓价拿，AI 用量大的商家先省一半。</p>
           <div class="pfoot"><span class="pprice">50 算力/份 起 <i class="u-cny">≈ ¥5</i></span><span class="buy-row"><button class="cart-mini" data-cart-product="opcLlm" data-name="大模型折扣仓" data-ppu="50" data-unit="额度包" data-per="/份" data-img="opcLlm">🛒 加购</button><button class="buy-now" data-buy-product="opcLlm" data-name="大模型折扣仓" data-ppu="50" data-unit="额度包" data-per="/份" data-img="opcLlm">立即购买</button></span></div>
+          <div style="margin-top:6px;font-size:10.5px;color:#8a6d3b;background:#fff7e6;border:1px dashed #e7c88f;border-radius:8px;padding:3px 8px">🧪 演示商品 · 购买不入算力余额</div>
         </div>
       </div>
       <div class="pcard rv">
@@ -887,6 +984,7 @@ input{font-family:inherit;color:inherit}
           <div class="pname">AIGC 漫剧创作工作台<span class="ptag">OPC</span></div>
           <p class="pdesc">分镜、角色、成片一条龙，批量产出漫剧短视频，带货与账号起号都能用。</p>
           <div class="pfoot"><span class="pprice">199 算力/席 <i class="u-cny">≈ ¥19.9</i></span><span class="buy-row"><button class="cart-mini" data-cart-product="opcComic" data-name="AIGC 漫剧创作工作台" data-ppu="199" data-unit="创作席位" data-per="/席" data-img="opcComic">🛒 加购</button><button class="buy-now" data-buy-product="opcComic" data-name="AIGC 漫剧创作工作台" data-ppu="199" data-unit="创作席位" data-per="/席" data-img="opcComic">立即购买</button></span></div>
+          <div style="margin-top:6px;font-size:10.5px;color:#8a6d3b;background:#fff7e6;border:1px dashed #e7c88f;border-radius:8px;padding:3px 8px">🧪 演示商品 · 购买不入算力余额</div>
         </div>
       </div>
     </div>
@@ -950,11 +1048,30 @@ input{font-family:inherit;color:inherit}
     <button class="sheet-close" data-close="rcMask">✕</button>
     <div class="rc-head">⚡ 充值算力<small>1 元 = 10 算力 · 按量计费 · 不用不花钱（充值算力永久有效）</small></div>
     <div class="rc-tiers">
-      <button class="rc-tier" data-pay="100" data-get="1000"><b>¥100</b><span>1000 算力</span></button>
-      <button class="rc-tier" data-pay="300" data-get="3600"><b>¥300</b><span>3000 算力</span><i class="rc-gift">+送 600</i></button>
-      <button class="rc-tier" data-pay="1000" data-get="13000"><b>¥1000</b><span>10000 算力</span><i class="rc-gift">+送 3000</i></button>
+      <button class="rc-tier" data-pay="100" data-get="1000"><b>¥100</b><span>到账 1000</span></button>
+      <button class="rc-tier" data-pay="300" data-get="3600"><b>¥300</b><span>到账 3600 · 含赠 600</span></button>
+      <button class="rc-tier" data-pay="1000" data-get="13000"><b>¥1000</b><span>到账 13000 · 含赠 3000</span></button>
     </div>
-    <div class="rc-note">赠送算力 90 天有效期 · 限文字类任务 · 发票按实付人民币金额开具 · 大客户对公充值请联系商务</div>
+    <div class="rc-note">充值所得算力（含赠送）通用不限 · 发票按实付人民币金额开具 · 大客户对公充值请联系商务 · <a id="rcHelpLink" style="color:var(--orange);font-weight:700;text-decoration:underline">❓ 什么是算力？看新手帮助</a></div>
+  </div>
+</div>
+
+<!-- 新手帮助 · 术语词典弹层（v3.29） -->
+<div class="mask" id="helpMask">
+  <div class="sheet">
+    <button class="sheet-close" data-close="helpMask">✕</button>
+    <div class="rc-head">❓ 新手帮助 · 术语词典<small>看不懂的词这里都有 · 也可以随时点左上角 🤖 问小潼</small></div>
+    <div class="help-list">
+      <div class="help-item"><b>⚡ 算力</b><span>商城里唯一的「钱」：1 元 = 10 算力。智能体按次扣算力，例：秦文文案 15 算力/次 ≈ ¥1.5，沈定 IP 全案 99 算力/份 ≈ ¥9.9。</span></div>
+      <div class="help-item"><b>🪙 积分（旧称）</b><span>以前叫「积分」，现在统一叫「算力」，是同一样东西，看到旧图写积分也别慌。</span></div>
+      <div class="help-item"><b>💬 访谈</b><span>智能体开工前先问你几个问题（一次只问一个），你的回答会自动填进「简报」——AI 照着做才不跑偏。</span></div>
+      <div class="help-item"><b>📋 简报</b><span>访谈答完自动生成的一页「任务卡」，字段可逐条改，你确认后才生成，改简报不花钱。</span></div>
+      <div class="help-item"><b>🆓 0 元开通 · 用后扣费</b><span>智能体不收月费、不用不花钱；点了「立即使用」并成功交付后才扣算力。</span></div>
+      <div class="help-item"><b>📦 交付才扣</b><span>东西做好、你在交付区看到结果了才扣算力，中途退出不算你头上。</span></div>
+      <div class="help-item"><b>🛡️ 失败不扣费</b><span>任务失败 / 超时不扣算力，余额原路不动。</span></div>
+      <div class="help-item"><b>🎁 赠送算力</b><span>注册 / 签到 / 邀请送的算力 90 天有效、限自营文字类智能体；充值所得（含赠送）通用不限。</span></div>
+    </div>
+    <div class="rc-note">还有疑问？点右上角 ？ 重看新手教学（小潼系统课 · 5 节带你上手）</div>
   </div>
 </div>
 
@@ -962,36 +1079,65 @@ input{font-family:inherit;color:inherit}
 <div class="mask" id="signMask">
   <div class="sheet">
     <button class="sheet-close" data-close="signMask">✕</button>
-    <div class="rc-head">📅 每日签到<small>5 算力/天 · 连签第 7 天 +30 · 每周封顶 60 · 断签重置</small></div>
+    <div class="rc-head">📅 每日签到<small>每日 +5 · 第 7 天 +30（含当天）· 每周封顶 60 · 断签重置</small></div>
     <div class="sign-grid" id="signGrid"></div>
     <button class="big-btn" id="signBtn" style="width:100%;min-height:44px">立即签到 · +5 算力</button>
-    <div class="rc-note">签到所得为赠送算力 · 90 天有效期 · 限文字类任务</div>
+    <div class="rc-note">签到所得为赠送算力 · 90 天有效期 · 限思潼自营文生类智能体</div>
   </div>
 </div>
 
-<!-- 邀请有礼弹层 -->
+<!-- 邀请有礼弹层 · 海报式 -->
 <div class="mask" id="invMask">
   <div class="sheet">
     <button class="sheet-close" data-close="invMask">✕</button>
-    <div class="rc-head">🎁 邀请有礼<small>好友得算力，你也得 · 人数不限</small></div>
-    <div class="inv-code"><span>专属邀请码 <b>ST-A8C3X2</b></span><button class="ghost-btn" id="invCopyBtn" style="min-height:36px;padding:0 12px">复制邀请链接</button></div>
-    <div class="inv-rules">
-      <p><b>① 好友注册立得</b><br>好友用你的链接注册并完成手机验证，立得 <b>100 算力</b>（赠送算力）。</p>
-      <p><b>② 好友用起来你才有奖</b><br>好友累计消耗满 <b>50 算力</b>，你实时得 <b>100 算力</b> · 人数不限，多邀多得。</p>
+    <div class="rc-head">🎁 邀请有礼<small>分享海报给好友 · 各得 100 算力 · 人数不限</small></div>
+    <div class="inv-poster">
+      <div class="ip-brand">思潼AI商城 · 智能体 0 元开通</div>
+      <div class="ip-title">好友开通<br><b>各得 100 算力</b></div>
+      <div class="ip-rewards">
+        <div><b>100</b><span>好友注册立得</span></div>
+        <div><b>100</b><span>好友消耗满50你得</span></div>
+      </div>
+      <div class="ip-bottom">
+        <div class="ip-qr" id="invQr" aria-label="邀请二维码"></div>
+        <div class="ip-code">
+          <small>专属邀请码</small>
+          <b>ST-A8C3X2</b>
+          <em>扫码或输码注册 · 实时到账</em>
+        </div>
+      </div>
+      <div class="ip-foot">奖励为赠送算力 · 90 天有效 · 限思潼自营文生类智能体 · 刷量追回</div>
     </div>
-    <div class="rc-note">奖励为赠送算力 · 90 天有效期 · 限文字类任务 · 平台风控前置，刷量将追回</div>
+    <div class="inv-btns">
+      <button class="big-btn" id="invSaveBtn">📥 保存海报</button>
+      <button class="ghost-btn" id="invCopyBtn" style="min-height:44px">复制邀请码</button>
+    </div>
+    <div class="rc-note">微信合规：只奖励「邀请成功 + 有效使用」结果 · 不做分享动作奖励 · 风控前置，同设备重复不触发</div>
   </div>
 </div>
 
-<!-- 我的弹层 -->
-<div class="mask" id="meMask">
+<!-- 算力明细弹层 -->
+<div class="mask" id="billMask">
   <div class="sheet">
-    <button class="sheet-close" data-close="meMask">✕</button>
+    <button class="sheet-close" data-close="billMask">✕</button>
+    <div class="rc-head">🧾 算力明细<small>充值 · 赠送 · 消耗 · 逐笔可查</small></div>
+    <div class="bill-list" id="billList"></div>
+    <div class="rc-note">签到 / 邀请所得为赠送算力 · 90 天有效 · 限思潼自营文生类智能体使用 · 充值所得（含赠送）通用不限</div>
+  </div>
+</div>
+
+<!-- 我的 · 独立页面 -->
+<section class="cases-view me-view" id="meView">
+  <div class="cv-head">
+    <div class="cv-title"><b>👤 我的</b><span>体验访客 · 演示账号</span></div>
+    <div class="cv-slogan">智能体订单可点进工作台 · 商品订单发货中 · 结算不扣算力</div>
+  </div>
+  <div class="cv-wrap">
     <div class="me-head">
       <span class="me-ava">👤</span>
       <div>
         <div class="me-name">体验访客</div>
-        <div class="me-sub">首次登入 · 2026-09-25 · 通用 · 创始人IP</div>
+        <div class="me-sub">首次登入 · 2026-09-25</div>
       </div>
     </div>
     <div class="me-bal-card">
@@ -1001,15 +1147,42 @@ input{font-family:inherit;color:inherit}
     <div class="me-sec-head"><b>📦 全部订单</b><span id="meOrderCount">0 笔</span></div>
     <div class="me-orders" id="orderList"></div>
     <div class="me-list">
-      <button class="me-item" id="meTeachBtn"><span class="mi-ico">🎓</span>重看新手教学<small style="color:var(--dim);font-size:11px;margin-left:8px">AI 管家小潼 30 秒带你上手</small><span class="mi-go">›</span></button>
-      <button class="me-item" id="meDemoBtn"><span class="mi-ico">▶</span>一键自动演示<span class="mi-go">›</span></button>
-      <button class="me-item" id="meSignBtn"><span class="mi-ico">📅</span>每日签到<small style="color:var(--dim);font-size:11px;margin-left:8px">天天 +5 算力 · 第 7 天 +30</small><span class="mi-go">›</span></button>
+      <button class="me-item" id="meTeachBtn"><span class="mi-ico">🎓</span>重看新手教学<small style="color:var(--dim);font-size:11px;margin-left:8px">小潼系统课 · 5 节带你上手</small><span class="mi-go">›</span></button>
+      <button class="me-item" id="meHelpBtn"><span class="mi-ico">❓</span>新手帮助 · 术语词典<small style="color:var(--dim);font-size:11px;margin-left:8px">算力 · 计费 · 访谈，一看就懂</small><span class="mi-go">›</span></button>
+      <button class="me-item" id="meDemoBtn"><span class="mi-ico">▶</span>一键自动演示<small style="color:var(--dim);font-size:11px;margin-left:8px">自动跑一遍下单全流程</small><span class="mi-go">›</span></button>
+      <button class="me-item" id="meSignBtn"><span class="mi-ico">📅</span>每日签到<small style="color:var(--dim);font-size:11px;margin-left:8px">每日 +5 · 第 7 天 +30 · 周封顶 60</small><span class="mi-go">›</span></button>
       <button class="me-item" id="meInviteBtn"><span class="mi-ico">🎁</span>邀请有礼<small style="color:var(--dim);font-size:11px;margin-left:8px">好友开通你就有奖</small><span class="mi-go">›</span></button>
-      <button class="me-item" onclick="toast('算力明细在正式版体验（演示）')"><span class="mi-ico">🧾</span>算力明细<span class="mi-go">›</span></button>
-      <button class="me-item" onclick="toast('会员体系在正式版体验（演示）')"><span class="mi-ico">💎</span>会员权益<span class="mi-go">›</span></button>
+      <button class="me-item" id="meBillBtn"><span class="mi-ico">🧾</span>算力明细<small style="color:var(--dim);font-size:11px;margin-left:8px">充值 · 赠送 · 消耗逐笔可查</small><span class="mi-go">›</span></button>
+      <button class="me-item" id="meLogoutBtn"><span class="mi-ico">🚪</span>退出登录<small style="color:var(--dim);font-size:11px;margin-left:8px">体验注册登录流程</small><span class="mi-go">›</span></button>
     </div>
   </div>
-</div>
+</section>
+
+<!-- 注册 / 登录页 -->
+<section class="cases-view auth-view" id="authView">
+  <button class="auth-skip" id="authSkip">先逛逛 ›</button>
+  <div class="auth-inner">
+    <div class="auth-brand">
+      <span class="auth-logo">⚡</span>
+      <b>思潼AI商城</b>
+      <small>8 位数字员工 · 0 元开通 · 按次付算力</small>
+    </div>
+    <div class="auth-inv" id="authInvBar" style="display:none">🎁 好友邀请你 · 注册立得 <b>100 算力</b><small id="authInvCode"></small></div>
+    <div class="auth-card">
+      <button class="auth-wx" id="authWxBtn"><i>💬</i>微信一键登录</button>
+      <div class="auth-or"><span>或用手机号</span></div>
+      <div class="auth-row"><input id="authPhone" type="tel" maxlength="11" placeholder="手机号" inputmode="numeric"></div>
+      <div class="auth-row">
+        <input id="authSms" type="tel" maxlength="6" placeholder="验证码" inputmode="numeric">
+        <button class="auth-sms-btn" id="authSmsBtn">获取验证码</button>
+      </div>
+      <button class="auth-go" id="authLoginBtn">登录 / 注册</button>
+      <label class="auth-agree"><input type="checkbox" id="authAgree" checked><span>已阅读并同意 <em>《用户协议》</em> 与 <em>《隐私政策》</em>（演示默认勾选）</span></label>
+    </div>
+    <div class="auth-inv-row"><input id="authInvInput" placeholder="邀请码（选填）" maxlength="12"></div>
+    <div class="auth-foot">新用户注册立得 100 算力 · 90 天有效 · 限思潼自营文生类智能体<br>演示原型 · 不发送真实短信 · 验证码 246810</div>
+  </div>
+</section>
 
 <!-- 购物车 · 独立页面（京东式） -->
 <section class="cases-view cart-view" id="cartView">
@@ -1021,7 +1194,7 @@ input{font-family:inherit;color:inherit}
     <div id="cartList"></div>
   </div>
   <div class="cart-paybar" id="cartPaybar">
-    <span class="cart-total">合计 <b id="cartTotal">0</b> 算力<i class="ct-cny" id="cartComputeCny">≈ ¥0</i><i class="ct-cny" id="cartCnyTotal" style="display:none"></i></span>
+    <span class="cart-total"><span id="cartSuanPart" style="display:none">合计 <b id="cartTotal">0</b> 算力<i class="ct-cny" id="cartComputeCny">≈ ¥0</i></span><i class="ct-cny" id="cartCnyTotal" style="display:none"></i></span>
     <button class="big-btn" id="cartCheckout" style="min-width:150px">去结算</button>
   </div>
 </section>
@@ -1033,9 +1206,11 @@ input{font-family:inherit;color:inherit}
   <div class="coach-pop" id="coachPop">
     <div class="cp-head">
       <span class="cp-ava">🤖</span>
-      <span><span class="cp-name">AI 管家小潼</span><br><span class="cp-tag">新手教学</span></span>
-      <span class="cp-step" id="cpStep">1/5</span>
+      <span><span class="cp-name">AI 管家小潼</span><br><span class="cp-tag" id="cpTag">新手教学</span></span>
+      <button class="cp-menu" id="cpMenu" style="display:none">☰ 目录</button>
+      <span class="cp-step" id="cpStep">开场</span>
     </div>
+    <div class="cp-courses" id="cpCourses" style="display:none"></div>
     <p class="cp-text" id="cpText"></p>
     <div class="cp-btns">
       <button class="cp-skip" id="cpSkip">跳过</button>
@@ -1060,7 +1235,6 @@ input{font-family:inherit;color:inherit}
     <div class="chat-zone show" id="tongChat">
       <div class="chat-row"><span class="chat-ava">🤖</span><span class="bubble" id="tongBubble"></span></div>
       <div id="tongChips" class="tong-chips"></div>
-      <div class="me-bubble" id="tongMeBubble"><span class="bubble" id="tongMeTxt"></span><span class="chat-ava" style="background:rgba(255,122,26,.15);border-color:rgba(255,122,26,.4)">🙋</span></div>
       <div class="chat-input"><input id="tongInput" type="text" placeholder="问小潼：今天发什么内容？"><button class="chat-send" id="tongSend">发送</button></div>
     </div>
   </div>
@@ -1118,7 +1292,7 @@ var EMPLOYEES = [
     ability:"一次讲透人设、目标用户、内容矩阵和选题方向，省得你自己东拼西凑。",
     deliver:"1 份 IP 定位全案：一句话定位 / 目标用户 / 人设五维 / 内容矩阵 / 选题方向",
     need:"品牌名、现状、目标用户线索" },
-  { key:"copywriter", name:"秦文", role:"金牌文案主笔", icon:"✍️", ok:true, ppu:15, priceUnit:"/次", priceNote:"轻文案 10 算力起 · 复杂任务按报价", tag:"可直发文案",
+  { key:"copywriter", name:"秦文", role:"金牌文案主笔", icon:"✍️", ok:true, ppu:15, priceUnit:"/次", priceNote:"轻量 10 算力/条 · 十件套打包 15 算力/次", tag:"可直发文案",
     hook:"你把卖点甩给我，我给你一条能直接念、能直接发的稿子。",
     hookFull:"我是你的金牌文案主笔秦文。你把卖点甩给我，我给你一条能直接念、能直接发的稿子。",
     personality:"说人话、重钩子，最烦绕弯子，擅长把专业词翻成顾客听得懂的大白话。",
@@ -1132,7 +1306,7 @@ var EMPLOYEES = [
     ability:"从播放、完播、互动、转化里找毛病，再给你下一步怎么改的动作。",
     deliver:"1 条视频复盘（播放 / 完播 / 互动 / 转化归因）+ 下一条迭代动作",
     need:"视频后台数据或链接" },
-  { key:"topic", name:"何策", role:"选题策略官", icon:"💡", ok:false, ppu:30, priceUnit:"/批", priceNote:"一批 5 条选题", tag:"短视频选题",
+  { key:"topic", name:"何策", role:"选题策略官", icon:"💡", ok:false, ppu:99, priceUnit:"/次", priceNote:"一批 5 条选题", tag:"短视频选题",
     hook:"每天给你挑好「今天拍哪条能火」，还讲清为什么。",
     hookFull:"我是你的选题策略官何策。每天给你挑好「今天拍哪条能火」，还讲清为什么。",
     personality:"脑子快、嗅觉灵，爱拆爆款，也会追着你问真实素材在哪。",
@@ -1192,9 +1366,9 @@ function toast(msg, ms){
   toastTimer = setTimeout(function(){ t.classList.remove("show"); }, ms || 2600);
 }
 
-var typeTimers = [];
 function typewriter(el, html, speed, cb){
-  typeTimers.forEach(clearTimeout); typeTimers = [];
+  /* 定时器挂在元素上：同元素重启才互斥，不同元素互不干扰（否则聊天回复的完成回调会被别的打字动画误杀） */
+  if(el._twTimer) clearTimeout(el._twTimer);
   el.innerHTML = "";
   var caret = document.createElement("span");
   caret.className = "caret"; el.appendChild(caret);
@@ -1202,10 +1376,10 @@ function typewriter(el, html, speed, cb){
   var text = tmp.textContent || "";
   var i = 0;
   var tick = function(){
-    if(i >= text.length){ if(cb) cb(); return; }
+    if(i >= text.length){ el._twTimer = null; if(cb) cb(); return; }
     caret.insertAdjacentText("beforebegin", text.charAt(i));
     i++;
-    typeTimers.push(setTimeout(tick, speed || 26));
+    el._twTimer = setTimeout(tick, speed || 26);
   };
   tick();
 }
@@ -1340,10 +1514,7 @@ function empCard(e){
       '<span class="emp-top"><b class="emp-name">' + e.name + '</b><span class="emp-role">' + e.role + ' · AI 智能体</span></span>' +
       '<span class="emp-hook" style="display:block">' + e.hook + '</span>' +
       '<span class="emp-deliver">' + e.tag + '</span>' +
-      '<span class="emp-price">⚡ ' + e.ppu + ' 算力' + (e.priceUnit || "/次") + ' <i>≈ ¥' + (e.ppu / 10) + '</i></span>' +
-    '</span>' +
-    '<span class="emp-buy">' +
-      '<span class="buy-row"><button class="cart-mini" data-cart="' + e.key + '" title="加入购物车">🛒</button><button class="buy-now' + (e.ok ? '' : ' dim') + '" data-buy="' + e.key + '">立即购买</button></span>' +
+      '<span class="emp-price">⚡ ' + e.ppu + ' 算力' + (e.priceUnit || "/次") + ' <i>≈ ¥' + (e.ppu / 10) + ' · 0元开通 · 用后扣费</i></span>' +
     '</span></article>';
 }
 (function(){
@@ -1357,20 +1528,14 @@ function empCard(e){
   $("#empDev").innerHTML = cDev;
   $("#empOk2").innerHTML = pOk;
   $("#empDev2").innerHTML = pDev;
+  /* 有详情页的智能体：点卡片进商品详情页（?agent= 直达）；其余仍开工作弹窗 */
+  var DETAIL_KEYS = { "ip-position":1, "copywriter":1, "video-diag":1, "topic":1, "live-host":1, "live-coach":1, "sales-coach":1, "private":1 };
   $$(".emp").forEach(function(card){
     card.addEventListener("click", function(){
       if(DEMO.on) stopDemo();
-      openModal(card.getAttribute("data-k"));
-    });
-  });
-  $$("[data-cart]").forEach(function(b){
-    b.addEventListener("click", function(ev){
-      ev.stopPropagation();
-      if(DEMO.on) stopDemo();
-      var key = b.getAttribute("data-cart"), hit = null;
-      EMPLOYEES.forEach(function(x){ if(x.key === key) hit = x; });
-      if(hit && hit.ok) addToCart({ key:hit.key, name:hit.name, unit:hit.tag, ppu:hit.ppu, per:hit.priceUnit || "/次" });
-      else if(hit) toast("「" + hit.name + "」开发中 · 上线后开放加购（演示）");
+      var k = card.getAttribute("data-k");
+      if(DETAIL_KEYS[k]){ location.href = "agent-product-detail-demo-20260923.html?agent=" + k + "&v=12"; return; }
+      openModal(k);
     });
   });
 })();
@@ -1418,14 +1583,14 @@ function openModal(key, auto){
       '<span class="m-ava-wrap"><span class="ring r1"></span><span class="ring r2"></span><span class="m-ava">' + (AVATARS[e.key] ? '<img class="ava-img" src="' + AVATARS[e.key] + '" alt="' + e.name + '">' : e.icon) + '</span></span>' +
       '<div>' +
         '<div class="m-name">' + e.name + '<span class="m-status ' + (e.ok ? "ok" : "dev") + '">' + (e.ok ? "● 在线可用" : "开发中") + '</span></div>' +
-        '<div class="m-role">' + e.role + ' · AI 智能体 · 通用（创始人IP）</div>' +
+        '<div class="m-role">' + e.role + ' · AI 智能体</div>' +
       '</div>' +
     '</div>' +
     '<div class="m-sec"><h4>✦ TA 是谁</h4><p>' + e.hookFull + '</p></div>' +
     '<div class="m-sec"><h4>✦ TA 能交付</h4><p>' + e.deliver + '</p></div>' +
     '<div class="m-sec"><h4>✦ 你要给 TA 什么</h4><p>' + e.need + '</p></div>' +
     (e.ok
-      ? '<div class="m-price-row"><span class="m-price">⚡ <b>' + e.ppu + ' 算力</b>' + (e.priceUnit || "/次") + ' <span class="u-cny">≈ ¥' + (e.ppu / 10) + '</span> · 0 元开通 · 按次结算</span>' + (e.priceNote ? '<span class="m-price-note">' + e.priceNote + '</span>' : '') + '</div>' +
+      ? '<div class="m-price-row"><span class="m-price">⚡ <b>' + e.ppu + ' 算力</b>' + (e.priceUnit || "/次") + ' <span class="u-cny">≈ ¥' + (e.ppu / 10) + '</span> · 0 元开通 · 用后扣费 · 失败不扣</span>' + (e.priceNote ? '<span class="m-price-note">' + e.priceNote + '</span>' : '') + '</div>' +
         '<div class="m-cta-row"><button class="big-btn" id="mChatBtn">💬 开始对话</button><button class="ghost-btn" data-close="empMask">先逛逛</button></div>'
       : '<div class="m-price-row"><span class="m-price" style="color:var(--amber)">🔐 开发中 · 上线后按 <b>' + e.ppu + ' 算力</b>' + (e.priceUnit || "/次") + ' 起</span>' + (e.priceNote ? '<span class="m-price-note">' + e.priceNote + '</span>' : '') + '</div>' +
         '<div class="m-cta-row"><button class="big-btn" id="mRemindBtn" style="filter:saturate(.7);background:linear-gradient(135deg,#3A4A72,#2A3760);box-shadow:none">🔔 预约上线提醒</button><button class="ghost-btn" data-close="empMask">先逛逛</button></div>') +
@@ -1485,20 +1650,76 @@ $$(".kk").forEach(function(k){
 var REG_GIFT = false;
 $("#startTodayBtn").addEventListener("click", function(){
   if(DEMO.on) stopDemo();
-  if(!REG_GIFT){
-    REG_GIFT = true;
-    creditBalance(100, "🎉 开通成功！100 算力已到账（赠送 · 90 天有效 · 限文字类任务）");
-    this.innerHTML = "⚡ 开始今日任务";
-    return;
-  }
+  if(!REG_GIFT){ openAuth(); return; }
   $("#today-strip").scrollIntoView({ behavior: "smooth", block: "center" });
   var c = $(".t-card");
   if(c){ c.classList.add("spotlight"); setTimeout(function(){ c.classList.remove("spotlight"); }, 2000); }
 });
-$("#browseAllBtn").addEventListener("click", function(){
-  if(DEMO.on) stopDemo();
-  $("#floor-employees").scrollIntoView({ behavior: "smooth", block: "start" });
+/* ================= 注册 / 登录页 ================= */
+var AUTH_SMS_T = null;
+function openAuth(){
+  var inv = "";
+  try{ inv = (new URLSearchParams(location.search).get("inv") || "").toUpperCase(); }catch(e){}
+  if(inv){
+    $("#authInvBar").style.display = "block";
+    $("#authInvCode").textContent = "邀请码 " + inv;
+    $("#authInvInput").value = inv;
+  } else {
+    $("#authInvBar").style.display = "none";
+    $("#authInvInput").value = "";
+  }
+  $("#authView").classList.add("show");
+}
+$("#authSkip").addEventListener("click", function(){ $("#authView").classList.remove("show"); });
+$("#authWxBtn").addEventListener("click", function(){
+  var b = this;
+  if(b.disabled) return;
+  b.disabled = true; b.innerHTML = '<i>💬</i>正在拉起微信…';
+  setTimeout(function(){
+    b.disabled = false; b.innerHTML = '<i>💬</i>微信一键登录';
+    authSuccess("微信");
+  }, 1100);
 });
+$("#authSmsBtn").addEventListener("click", function(){
+  var ph = $("#authPhone").value.replace(/\D/g, "");
+  if(ph.length !== 11){ toast("请输入 11 位手机号", 2200); return; }
+  var b = this, sec = 60;
+  b.disabled = true; b.textContent = sec + "s 后重发";
+  toast("📲 演示：验证码 246810 已自动填充", 2600);
+  $("#authSms").value = "246810";
+  if(AUTH_SMS_T) clearInterval(AUTH_SMS_T);
+  AUTH_SMS_T = setInterval(function(){
+    sec--;
+    if(sec <= 0){ clearInterval(AUTH_SMS_T); b.disabled = false; b.textContent = "获取验证码"; }
+    else b.textContent = sec + "s 后重发";
+  }, 1000);
+});
+$("#authLoginBtn").addEventListener("click", function(){
+  var ph = $("#authPhone").value.replace(/\D/g, "");
+  if(ph.length !== 11){ toast("请输入 11 位手机号", 2200); return; }
+  if(!$("#authSms").value.trim()){ toast("请输入验证码（演示码 246810）", 2200); return; }
+  if(!$("#authAgree").checked){ toast("请先勾选同意《用户协议》与《隐私政策》", 2400); return; }
+  authSuccess("手机号 " + ph.slice(0, 3) + "****" + ph.slice(7));
+});
+function authSuccess(method){
+  var inv = $("#authInvInput").value.trim().toUpperCase();
+  $("#authView").classList.remove("show");
+  if(!REG_GIFT){
+    REG_GIFT = true;
+    $("#startTodayBtn").innerHTML = "⚡ 开始今日任务";
+    creditBalance(100, "🎉 注册成功！100 算力已到账（赠送 · 90 天有效 · 限思潼自营文生类智能体）" + (inv ? " · 邀请码 " + inv + " 已绑定" : "") + "（演示）", "🎁 注册赠送");
+  } else {
+    toast("✅ 已登录：" + method + "（演示）", 2400);
+  }
+}
+$("#meLogoutBtn").addEventListener("click", function(){
+  if(DEMO.on) stopDemo();
+  $("#meView").classList.remove("show");
+  toast("已退出登录 · 当前为游客状态（演示）", 2200);
+  setTimeout(openAuth, 600);
+});
+/* URL 带 ?inv= 直接进注册页（好友扫码/海报链路场景） */
+try{ if(new URLSearchParams(location.search).get("inv")) setTimeout(openAuth, 600); }catch(e){}
 $("#lanqiBtn").addEventListener("click", function(){ toast("正式版将跳转美业门店AI经营大脑 demo（演示）"); });
 $("#consBaolu").addEventListener("click", function(){ toast("保禄数字分身授权训练中 · 即将上线（演示）"); });
 $("#rechargeBtn").addEventListener("click", openRecharge);
@@ -1508,9 +1729,43 @@ function openRecharge(){
   if(DEMO.on) stopDemo();
   $("#rcMask").classList.add("show");
 }
-function creditBalance(n, msg){
+/* ================= 算力账本 & 明细 ================= */
+var BILL_LOG = [
+  { t: "09-26 11:30", name: "🤖 江流 · 视频脚本", v: -50 },
+  { t: "09-26 09:15", name: "🤖 罗盘 · 开播话术", v: -50 },
+  { t: "09-25 12:40", name: "🤖 秦文 · 五一团购文案", v: -15 },
+  { t: "09-25 10:02", name: "⚡ 充值 ¥300（含赠送 600）", v: 3600 },
+  { t: "09-25 10:02", name: "🎁 注册赠送", v: 100 }
+];
+function nowStr(){
+  var d = new Date();
+  function p(n){ return n < 10 ? "0" + n : "" + n; }
+  return p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+function billPush(name, v){
+  BILL_LOG.unshift({ t: nowStr(), name: name, v: v });
+  if(BILL_LOG.length > 60) BILL_LOG.length = 60;
+  var bm = document.getElementById("billMask");
+  if(bm && bm.classList.contains("show")) renderBill();
+}
+function renderBill(){
+  var el = $("#billList");
+  if(!el) return;
+  el.innerHTML = BILL_LOG.map(function(b){
+    return '<div class="bill-item"><div class="bi-main"><div class="bi-name">' + b.name +
+      '</div><div class="bi-time">' + b.t + '</div></div><span class="bi-v ' +
+      (b.v > 0 ? "plus" : "minus") + '">' + (b.v > 0 ? "+" : "−") + fmt(Math.abs(b.v)) +
+      '</span></div>';
+  }).join("");
+}
+$("#meBillBtn").addEventListener("click", function(){
+  renderBill();
+  $("#billMask").classList.add("show");
+});
+function creditBalance(n, msg, label){
   var from = BALANCE;
   BALANCE += n;
+  billPush(label || "算力到账", n);
   tweenNum($("#balNum"), from, BALANCE, 900);
   tweenNum($("#navBalNum"), from, BALANCE, 900);
   tweenNum($("#meBalNum"), from, BALANCE, 900);
@@ -1521,7 +1776,7 @@ $$("#rcMask .rc-tier").forEach(function(t){
   t.addEventListener("click", function(){
     var pay = t.getAttribute("data-pay"), get = +t.getAttribute("data-get"), gift = get - pay * 10;
     $("#rcMask").classList.remove("show");
-    creditBalance(get, "⚡ 充值成功：实付 ¥" + pay + " · 到账 " + fmt(get) + " 算力" + (gift > 0 ? "（含赠送 " + gift + " · 90 天有效）" : "") + "（演示）");
+    creditBalance(get, "⚡ 充值成功：实付 ¥" + pay + " · 到账 " + fmt(get) + " 算力" + (gift > 0 ? "（含赠送 " + gift + " · 通用不限）" : "") + "（演示）", "⚡ 充值 ¥" + pay);
   });
 });
 /* ================= 每日签到 & 邀请有礼 ================= */
@@ -1539,7 +1794,7 @@ function openSign(){
   if(DEMO.on) stopDemo();
   renderSign();
   var btn = $("#signBtn");
-  btn.textContent = SIGNED ? "今日已签 ✓ 明天再来" : "立即签到 · +5 算力";
+  btn.textContent = SIGNED ? "今日已签 ✓ 明天再来" : "立即签到 · +" + (SIGN_DAY === 7 ? 30 : 5) + " 算力";
   btn.disabled = SIGNED;
   btn.style.opacity = SIGNED ? ".55" : "";
   $("#signMask").classList.add("show");
@@ -1548,20 +1803,20 @@ $("#meSignBtn").addEventListener("click", openSign);
 $("#signBtn").addEventListener("click", function(){
   if(SIGNED) return;
   SIGNED = true;
-  var extra = SIGN_DAY === 7 ? 30 : 0;
+  var pay = SIGN_DAY === 7 ? 30 : 5; /* 第 7 天发 30（含当天）：周合计 6×5+30=60 恰好等于周封顶 */
   renderSign();
   this.textContent = "今日已签 ✓ 明天再来";
   this.disabled = true;
   this.style.opacity = ".55";
-  creditBalance(5 + extra, "📅 签到成功 +5 算力（赠送 · 90 天有效 · 限文字类任务）" + (extra ? " · 连签 7 天奖励 +30 也已到账！" : "") + "（演示）");
+  creditBalance(pay, "📅 签到成功 +" + pay + " 算力（赠送 · 90 天有效 · 限思潼自营文生类智能体）" + (pay === 30 ? " · 第 7 天发 30（含当天）" : "") + "（演示）");
 });
 $("#meInviteBtn").addEventListener("click", function(){
   if(DEMO.on) stopDemo();
   $("#invMask").classList.add("show");
 });
 $("#invCopyBtn").addEventListener("click", function(){
-  var txt = "https://ai.lcppch.top/agents?inv=ST-A8C3X2";
-  function ok(){ toast("✅ 邀请链接已复制 · 好友开通立得 100 算力（演示）", 3000); }
+  var txt = "ST-A8C3X2";
+  function ok(){ toast("✅ 邀请码已复制 · 好友开通立得 100 算力（演示）", 3000); }
   function fallback(){
     var ta = document.createElement("textarea");
     ta.value = txt; document.body.appendChild(ta); ta.select();
@@ -1572,6 +1827,34 @@ $("#invCopyBtn").addEventListener("click", function(){
     navigator.clipboard.writeText(txt).then(ok, fallback);
   } else { fallback(); }
 });
+$("#invSaveBtn").addEventListener("click", function(){
+  toast("📥 海报已保存到相册（演示）", 3000);
+});
+/* 伪二维码：确定性 pattern（演示用，无真实跳转） */
+(function(){
+  var qr = document.getElementById("invQr");
+  if(!qr) return;
+  var seed = 0, s = "ST-A8C3X2";
+  for(var k = 0; k < s.length; k++) seed = (seed * 31 + s.charCodeAt(k)) % 2147483647;
+  function rnd(){ seed = (seed * 48271) % 2147483647; return seed / 2147483647; }
+  var html = "";
+  for(var r = 0; r < 21; r++){
+    for(var c = 0; c < 21; c++){
+      var corner = (r < 7 && c < 7) || (r < 7 && c > 13) || (r > 13 && c < 7);
+      var fill;
+      if(corner){
+        var rr = r >= 14 ? r - 14 : r, cc = c >= 14 ? c - 14 : c;
+        var inRing = rr === 0 || rr === 6 || cc === 0 || cc === 6;
+        var inCore = rr >= 2 && rr <= 4 && cc >= 2 && cc <= 4;
+        fill = inRing || inCore;
+      } else {
+        fill = rnd() > 0.52;
+      }
+      html += fill ? '<i class="f"></i>' : '<i></i>';
+    }
+  }
+  qr.innerHTML = html;
+})();
 var lastTab = "home";
 $$(".tab").forEach(function(t){
   t.addEventListener("click", function(){
@@ -1587,6 +1870,7 @@ function switchTab(name, btn){
   lastTab = name;
   $("#casesView").classList.remove("show");
   $("#cartView").classList.remove("show");
+  $("#meView").classList.remove("show");
   if(name === "home"){ window.scrollTo({ top: 0, behavior: "smooth" }); }
   else if(name === "cases"){
     var cv = $("#casesView");
@@ -1594,7 +1878,7 @@ function switchTab(name, btn){
     if(!cvState.inited) cvInit();
   }
   else if(name === "cart"){ var pv = $("#cartView"); pv.classList.add("show"); pv.scrollTop = 0; }
-  else if(name === "me"){ $("#meMask").classList.add("show"); }
+  else if(name === "me"){ var mv = $("#meView"); mv.classList.add("show"); mv.scrollTop = 0; }
 }
 
 /* ================= AI 案例 · 信息流（v3.12） ================= */
@@ -1613,7 +1897,7 @@ var CASE_DATA = [
     sub:"律师事务所创始人 · 1 人运营 · 二线城市",
     before:"账号做了半年 800 粉，今天普法明天追热点，粉丝记不住他是谁，评论区问了也不委托。",
     steps:["AI 定位全案先定「一句话人设」：只讲劳动仲裁","内容矩阵收成 3 条主线，每条都往「专业靠谱」上堆","选题只选有客户原话支撑的问题，热点一律让位"],
-    cost:"99 算力/份", cycle:"3 天出全案",
+    cost:"99 算力/份", cycle:"快速出全案",
     metrics:[["月案源咨询","25 通","45 通"],["粉丝","800","2.6 万"]],
     inspire:"个人 IP 不是发得多，是让人记住「你专门解决什么」。",
     ref:{ type:"emp", key:"ip-position" }, refName:"沈定" },
@@ -1712,7 +1996,7 @@ var CASE_DATA = [
     sub:"单店 · 3 人 · 抖音同城",
     before:"凭感觉拍了 38 条，最高 2,000 播放；不知道客户到底想看什么，越拍越没信心。",
     steps:["私有知识库同步 30 天客户问题","每天 AI 出 5 条带理由的选题","三关筛选：有证据 / 有流量 / 合阶段"],
-    cost:"30 算力/批", cycle:"当天出选题",
+    cost:"99 算力/次", cycle:"当天出选题",
     metrics:[["月均播放","1.2 万","38 万"],["爆款率（>5万）","0%","17%"]],
     inspire:"别再凭感觉拍——把「客户真在问什么」变成选题清单，起号快一倍。",
     ref:{ type:"emp", key:"topic" }, refName:"何策" }
@@ -1793,7 +2077,7 @@ $("#casesFeed").addEventListener("click", function(ev){
 });
 function caseUseSame(c){
   var r = c.ref;
-  if(r.type === "emp"){ openModal(r.key); return; }
+  if(r.type === "emp"){ location.href = "agent-product-detail-demo-20260923.html?agent=" + r.key + "&v=12"; return; }
   if(r.type === "prod"){
     $("#casesView").classList.remove("show");
     switchTab("home", $('.tab[data-tab="home"]'));
@@ -1861,7 +2145,7 @@ function renderCart(){
   var paybar = $("#cartPaybar");
   if(paybar) paybar.style.display = CART_ITEMS.length ? "flex" : "none";
   if(!CART_ITEMS.length){
-    list.innerHTML = '<div class="cart-empty"><span class="ce-ico">🛒</span><b>购物车还是空的</b><br><span style="font-size:11px">在商城里点「🛒 加购」，把看好的智能体 / 课程 / 硬件加进来</span><br><button class="ghost-btn" id="cartGoMall" style="margin-top:16px;min-height:40px">去商城逛逛 ›</button></div>';
+    list.innerHTML = '<div class="cart-empty"><span class="ce-ico">🛒</span><b>购物车还是空的</b><br><span style="font-size:11px">在商城里点「🛒 加购」，把看好的课程 / 硬件 / 额度包加进来（智能体不用加购，0 元开通直接用）</span><br><button class="ghost-btn" id="cartGoMall" style="margin-top:16px;min-height:40px">去商城逛逛 ›</button></div>';
     var gm = $("#cartGoMall");
     if(gm) gm.addEventListener("click", function(){ switchTab("home", $('.tab[data-tab="home"]')); });
   } else {
@@ -1880,11 +2164,13 @@ function renderCart(){
     });
     list.innerHTML = html;
   }
+  var sp = $("#cartSuanPart");
+  if(sp) sp.style.display = tc > 0 ? "" : "none"; /* 纯人民币商品时隐藏算力轨，不显示「合计 0 算力」噪音 */
   $("#cartTotal").textContent = fmt(tc);
   $("#cartComputeCny").textContent = "≈ ¥" + fmt(tc / 10);
   var cy = $("#cartCnyTotal");
   cy.style.display = ty > 0 ? "" : "none";
-  cy.textContent = "+ ¥" + fmt(ty) + " 直购";
+  cy.textContent = (tc > 0 ? "+ ¥" : "¥") + fmt(ty) + " 直购";
   $("#cartCount").textContent = count + " 件商品";
   var badge = $("#tabCartBadge");
   if(badge){ badge.textContent = count; badge.style.display = count ? "inline-flex" : "none"; }
@@ -1904,31 +2190,32 @@ $$("[data-cart-product]").forEach(function(b){
 });
 function buyNow(it){
   if(DEMO.on) stopDemo();
-  var isEmp = !it.img && EMPLOYEES.some(function(x){ return x.key === it.key; });
   var cny = it.cur === "cny";
-  ORDERS.unshift({ no:"SO-20260926-" + String(100 + ORDERS.length), empKey:isEmp ? it.key : null,
+  ORDERS.unshift({ no:"SO-20260926-" + String(100 + ORDERS.length), empKey:null,
     name:it.name, unit:it.unit, ppu:it.ppu, qty:1, per:it.per || "", img:it.img || null, cur:cny ? "cny" : "",
-    status:isEmp ? "已开通" : "已完成" });
+    status:"已完成" });
   renderOrders();
   $$(".mask").forEach(function(m){ m.classList.remove("show"); });
-  $("#meMask").classList.add("show");
+  switchTab("me", $('.tab[data-tab="me"]'));
   toast("✅ 下单成功：" + it.name + " · " + (cny ? "¥" + fmt(it.ppu) + "（人民币直购）" : fmt(it.ppu) + " 算力" + (it.per || "") + " ≈ ¥" + (it.ppu / 10)) + "（演示）", 3200);
 }
-$$("[data-buy]").forEach(function(b){
-  b.addEventListener("click", function(ev){
-    ev.stopPropagation();
-    if(DEMO.on) stopDemo();
-    var k = b.getAttribute("data-buy"), hit = null;
-    EMPLOYEES.forEach(function(x){ if(x.key === k) hit = x; });
-    if(!hit) return;
-    if(!hit.ok){ toast("「" + hit.name + "」开发中 · 上线后开放购买（演示）"); return; }
-    buyNow({ key:hit.key, name:hit.name, unit:hit.tag, ppu:hit.ppu, per:hit.priceUnit || "/次" });
-  });
-});
+/* 数字员工 = 按量付费服务：首页卡片只展示算力金额；点卡片进详情页，详情页「立即使用」→ 进工作台
+   （WORKBENCH 跳转逻辑已移至详情页 js-mainCta 的 WBMAP，此处不再保留 useAgent） */
 $$("[data-buy-product]").forEach(function(b){
   b.addEventListener("click", function(ev){
     ev.stopPropagation();
     buyNow({ key:b.getAttribute("data-buy-product"), name:b.getAttribute("data-name"), unit:b.getAttribute("data-unit"), ppu:+b.getAttribute("data-ppu"), per:b.getAttribute("data-per"), img:b.getAttribute("data-img"), cur:b.getAttribute("data-cur") || "" });
+  });
+});
+/* 商品卡（AI硬件 / AI课程）：卡片只留「🛒 加购」，点卡片进详情页，详情页才有「立即购买」（OPC 暂保留卡片直购） */
+var PRODUCT_KEYS = { "hwRec":1, "hwRobot":1, "courseAgent":1, "courseWb":1 };
+$$(".pcard").forEach(function(card){
+  var b = card.querySelector("[data-cart-product]");
+  if(!b || !PRODUCT_KEYS[b.getAttribute("data-cart-product")]) return;
+  card.classList.add("pcard-link");
+  card.addEventListener("click", function(){
+    if(DEMO.on) stopDemo();
+    location.href = "agent-product-detail-demo-20260923.html?agent=" + b.getAttribute("data-cart-product") + "&v=12";
   });
 });
 $$("[data-buy-dev]").forEach(function(b){
@@ -1942,37 +2229,30 @@ $("#cartCheckout").addEventListener("click", function(){
   if(!CART_ITEMS.length){ toast("🛒 购物车还是空的，先去商城逛逛"); return; }
   var count = 0, tc = 0, ty = 0;
   CART_ITEMS.forEach(function(it){
-    var isEmp = !it.img && EMPLOYEES.some(function(x){ return x.key === it.key; });
     var cny = it.cur === "cny";
     if(cny) ty += it.ppu * it.qty; else tc += it.ppu * it.qty;
     count += it.qty;
-    ORDERS.unshift({ no:"SO-20260926-" + String(100 + ORDERS.length), empKey:isEmp ? it.key : null,
+    ORDERS.unshift({ no:"SO-20260926-" + String(100 + ORDERS.length), empKey:null,
       name:it.name, unit:it.unit, ppu:it.ppu, qty:it.qty, per:it.per || "", img:it.img || null, cur:cny ? "cny" : "",
-      status:isEmp ? "已开通" : "已完成" });
+      status:"已完成" });
   });
   CART_ITEMS = [];
   renderCart();
   renderOrders();
   $("#cartView").classList.remove("show");
-  $$(".tab").forEach(function(x){ x.classList.remove("act"); });
-  var meTab = $('.tab[data-tab="me"]');
-  if(meTab) meTab.classList.add("act");
-  lastTab = "me";
-  $("#meMask").classList.add("show");
+  switchTab("me", $('.tab[data-tab="me"]'));
   var msg = "✅ 下单成功：" + count + " 件商品";
   if(tc) msg += " · 算力 " + fmt(tc) + " ≈ ¥" + (tc / 10);
   if(ty) msg += " · 直购 ¥" + fmt(ty);
   toast(msg + "（演示）", 3400);
 });
 
-/* ================= 我的 · 全部订单（点智能体订单进工作台） ================= */
+/* ================= 我的 · 全部订单（只有商品订单：课程/硬件等；智能体消耗走「算力明细」流水） ================= */
 var ORDERS = [
-  { no:"SO-20260925-001", empKey:"live-host", name:"罗盘 · 直播话术师", unit:"智能体 · 按次结算", ppu:50, qty:1, per:"/场", img:null, status:"使用中" },
   { no:"SO-20260924-018", empKey:null, name:"智能体开发课", unit:"视频课 · 1 门", ppu:199, qty:1, per:"", img:"courseAgent", cur:"cny", status:"已开通" },
   { no:"SO-20260923-105", empKey:null, name:"AI 录音卡", unit:"硬件 · 1 台", ppu:199, qty:1, per:"", img:"hwRec", cur:"cny", status:"已发货" }
 ];
 function orderPic(o){
-  if(o.empKey && AVATARS[o.empKey]) return '<img class="od-ava" src="' + AVATARS[o.empKey] + '" alt="">';
   if(o.img && IMG_ASSETS[o.img]) return '<img class="od-ava" src="data:image/jpeg;base64,' + IMG_ASSETS[o.img] + '" alt="">';
   return '<span class="od-ava" style="display:grid;place-items:center;background:rgba(255,122,26,.12);font-size:18px">🛍️</span>';
 }
@@ -1980,35 +2260,30 @@ function renderOrders(){
   var list = $("#orderList");
   if(!list) return;
   var html = "";
-  ORDERS.forEach(function(o, i){
-    var emp = null;
-    if(o.empKey) EMPLOYEES.forEach(function(x){ if(x.key === o.empKey && x.ok) emp = x; });
-    var st = o.status === "使用中" ? "st-use" : (o.status === "已开通" ? "st-open" : "st-done");
-    html += '<div class="od-item' + (emp ? ' click" data-od="' + i : '') + '">' + orderPic(o) +
+  ORDERS.forEach(function(o){
+    var st = o.status === "已开通" ? "st-open" : "st-done";
+    html += '<div class="od-item">' + orderPic(o) +
       '<div class="od-main"><b>' + o.name + '</b><span>' + o.no + ' · ' + o.unit + (o.qty > 1 ? ' · x' + o.qty : '') + '</span></div>' +
       '<div class="od-side"><span class="od-status ' + st + '">' + o.status + '</span>' +
-      (emp ? '<span class="od-go">进入工作台 ›</span>' : '<span class="od-go" style="visibility:hidden">·</span>') + '</div></div>';
+      '<span class="od-go" style="visibility:hidden">·</span></div></div>';
   });
   list.innerHTML = html;
   $("#meOrderCount").textContent = ORDERS.length + " 笔";
-  $$("[data-od]", list).forEach(function(el){
-    el.addEventListener("click", function(){
-      var o = ORDERS[+el.getAttribute("data-od")];
-      closeMask("meMask");
-      openModal(o.empKey, true);
-    });
-  });
 }
 renderOrders();
-$("#meTeachBtn").addEventListener("click", function(){ closeMask("meMask"); startCoach(false); });
-$("#meDemoBtn").addEventListener("click", function(){ closeMask("meMask"); runDemo(); });
+$("#meTeachBtn").addEventListener("click", function(){ switchTab("home", $('.tab[data-tab="home"]')); startCoach(false); });
+$("#meHelpBtn").addEventListener("click", function(){ $("#helpMask").classList.add("show"); });
+$("#heroHelpBtn").addEventListener("click", function(){ $("#helpMask").classList.add("show"); });
+$("#rcHelpLink").addEventListener("click", function(){ $("#rcMask").classList.remove("show"); $("#helpMask").classList.add("show"); });
+$("#meDemoBtn").addEventListener("click", function(){ switchTab("home", $('.tab[data-tab="home"]')); runDemo(); });
 $("#helpBtn").addEventListener("click", function(){ if(DEMO.on) stopDemo(); startCoach(false); });
 $("#demoBtn").addEventListener("click", function(){ DEMO.on ? stopDemo() : runDemo(); });
 
 /* ================= 算力扣减演示 ================= */
-function spend(n){
+function spend(n, label){
   var from = BALANCE;
   BALANCE -= n;
+  billPush(label || "智能体消耗", -n);
   tweenNum($("#balNum"), from, BALANCE, 900);
   tweenNum($("#navBalNum"), from, BALANCE, 900);
   tweenNum($("#meBalNum"), from, BALANCE, 900);
@@ -2023,49 +2298,123 @@ function consume(n, who){
     if(btn){ btn.classList.remove("spotlight"); void btn.offsetWidth; btn.classList.add("spotlight"); setTimeout(function(){ btn.classList.remove("spotlight"); }, 2200); }
     return false;
   }
-  spend(n);
+  spend(n, who);
   if(BALANCE < 50) setTimeout(function(){ toast("💡 余额不足 50 算力了，及时充值免得任务中断", 3000); }, 1100);
   return true;
 }
 
-/* ================= 首次登入教学 ================= */
+/* ================= 新手教学 · 课程化 v2 ================= */
 var COACH_SEEN_KEY = "agents_home_coach_v1";
+var COACH_DONE_KEY = "agents_home_coach_courses_v2";
 var coachIdx = 0, coachTyping = null;
+var COACH_COURSES = [
+  { icon:"🏪", t:"认识商城", d:"搜索示范 + 七大板块", from:1, to:2 },
+  { icon:"🤖", t:"智能体与派单", d:"看懂卡片 · 派单三步", from:3, to:4 },
+  { icon:"⚡", t:"算力与充值", d:"1元=10算力 · 三档充值", from:5, to:7 },
+  { icon:"🛒", t:"加购与订单", d:"加购结算 · 双币合计", from:8, to:9 },
+  { icon:"🎁", t:"签到与邀请", d:"每日+5 · 邀请得100", from:10, to:11 }
+];
 var COACH_STEPS = [
   { sel:null,
-    text:"你好，我是 AI 管家小潼 🤖\n30 秒带你逛懂「思潼AI商城」：找谁干活、怎么派单、怎么算算力。",
-    next:"开始教学 ›" },
+    text:"你好，我是 AI 管家小潼 🤖\n教学升级成 5 节小课了：认识商城 → 智能体派单 → 算力充值 → 加购订单 → 签到邀请。每节 20 秒左右，可以整段学完，也可以只挑想听的课。",
+    next:"看课程目录 ›" },
   { sel:"#searchbox",
-    text:"想找谁干活，直接搜：文案、定位、复盘、直播…\n小潼先示范一下 👉",
+    text:"【第1课 · 认识商城】\n找谁干活，直接搜：文案、定位、复盘、直播…\n小潼先示范一下 👉",
     next:"下一步 ›", demoSearch:true },
   { sel:"#kingkong",
-    text:"这里是七大板块：内容获客 / 私域营销 / 数字咨询师 / AI硬件 / AI课程 / OPC专区 / 行业工作台。AI 相关的都在这，点图标直达。",
-    next:"下一步 ›" },
+    text:"七大板块全在这：内容获客 / 私域营销 / 数字咨询师 / AI硬件 / AI课程 / OPC专区 / 行业工作台。AI 相关的都在这，点图标直达对应楼层。" },
   { sel:"#emp-ip-position",
-    text:"这是智能体卡：头像光环 = TA 正在待命 🟢 绿点现在就能用，🟡 琥珀点是开发中。点卡片看 TA 能交付什么，用完提示消耗了多少算力。",
-    next:"下一步 ›" },
-  { sel:"#wallet",
-    text:"算力就是 AI 的工资，按次结算 ⚡\n汇率固定：1 元 = 10 算力。比如秦文写一条文案 15 算力 ≈ ¥1.5，罗盘出整场直播逐字稿 50 算力 ≈ ¥5。余额不够就点「充值」，100 元起充，用多少充多少，不用不花钱。",
-    next:"下一步 ›" },
+    text:"【第2课 · 智能体与派单】\n用人的逻辑很简单：你遇到什么需求，就找能解决它的员工。比如想做 IP 又说不清定位，找沈定——TA 交付「一句话人设 + 全套定位方案」，99 算力 ≈ ¥9.9，快速出全案。" },
   { sel:null,
-    text:"教学完成 ✅ 现在就去给智能体派你的第一个任务吧！\n随时点右上角 ？ 再看一遍教学。",
-    next:"随便逛逛 🚀", done:true }
+    text:"按需求对号入座：要发团购文案找秦文（15 算力/次）；开播前要话术找罗盘（50 算力/场）；直播完要复盘找许复（50 算力/场）；视频没人看找江流（50 算力/次）；不知道拍什么找何策（99 算力/次）。点卡片进详情页 → 点「⚡ 立即使用」→ 贴上你的需求素材 → 发送，交付才扣算力，失败不扣费。" },
+  { sel:"#wallet",
+    text:"【第3课 · 算力与充值】\n算力是平台唯一货币，1 元 = 10 算力。智能体 0 元开通、按次计费：秦文文案 15/次 ≈ ¥1.5，罗盘直播稿 50/场 ≈ ¥5，沈定 IP 全案 99/份 ≈ ¥9.9。" },
+  { sel:"#rechargeBtn",
+    text:"充值三档：¥100 = 1000 算力；¥300 = 3600（加赠 600）；¥1000 = 13000（加赠 3000）。充值所得算力（含赠送）通用不限，只有签到和邀请送的算力才限思潼自营文生类智能体。用多少充多少，不用不花钱。" },
+  { sel:null,
+    text:"两道保护：任务失败/超时不扣算力；余额低于 50 会提醒你及时充值。每一笔消耗在「我的 → 算力明细」逐笔可查。" },
+  { sel:"#floor-hardware",
+    text:"【第4课 · 加购与订单】\n看好的商品点「🛒 加购」——课程、硬件、额度包都能加，同类自动合并数量。要「立即购买」？点商品卡进详情页。智能体不用加购：点卡片进详情页，点「立即使用」直接开工。" },
+  { sel:'.tab[data-tab="cart"]',
+    text:"点底部「购物车」进独立购物车页：算力商品和人民币直购分开合计，点「去结算」一键下单，订单在「我的 → 全部订单」随时看。智能体没有订单——每笔消耗记在「算力明细」里。" },
+  { sel:null,
+    text:"【第5课 · 签到与邀请】\n每日签到 +5 算力，第 7 天发 30（含当天，周合计 6×5+30 恰好 60 封顶）。签到得的是赠送算力：90 天有效、限思潼自营文生类智能体。" },
+  { sel:null,
+    text:"邀请有礼：好友用你的邀请码注册，立得 100 算力；好友累计消耗满 50 算力，你再得 100。入口都在「我的」页，邀请码 ST-A8C3X2 可直接复制。" },
+  { sel:null,
+    text:"结业 🎓 五课通关：搜商城 → 派单 → 算力充值 → 加购结算 → 签到邀请。现在就去派你的第一个任务吧！右上角 ？ 可挑任意一课重看。",
+    next:"开始逛商城 🚀", done:true }
 ];
+function coachDoneSet(){ try{ return (localStorage.getItem(COACH_DONE_KEY) || "").split(",").filter(Boolean).map(Number); }catch(err){ return []; } }
+function coachMarkDone(c){ try{ var s = coachDoneSet(); if(s.indexOf(c) < 0){ s.push(c); localStorage.setItem(COACH_DONE_KEY, s.join(",")); } }catch(err){} }
+function coachStepCourse(i){ for(var k = 0; k < COACH_COURSES.length; k++){ if(i >= COACH_COURSES[k].from && i <= COACH_COURSES[k].to) return k + 1; } return 0; }
+function firstUndoneCourse(){ var done = coachDoneSet(); for(var k = 0; k < COACH_COURSES.length; k++){ if(done.indexOf(k + 1) < 0) return COACH_COURSES[k].from; } return -1; }
 function buildDots(){
   var d = $("#cpDots"); d.innerHTML = "";
-  COACH_STEPS.forEach(function(s, i){
+  var c = coachStepCourse(coachIdx);
+  if(c === 0){ d.style.display = "none"; return; }
+  d.style.display = "";
+  var m = COACH_COURSES[c - 1];
+  for(var i = m.from; i <= m.to; i++){
     var dot = document.createElement("i");
     if(i === coachIdx) dot.classList.add("act");
     d.appendChild(dot);
+  }
+}
+function renderCourses(){
+  var done = coachDoneSet(), html = "";
+  COACH_COURSES.forEach(function(c, k){
+    var isDone = done.indexOf(k + 1) >= 0;
+    html += '<button class="cp-course-item" data-course="' + (k + 1) + '">' +
+      '<span class="ci-ico">' + c.icon + '</span>' +
+      '<span class="ci-main"><b>第' + (k + 1) + '课 · ' + c.t + '</b><small>' + c.d + '</small></span>' +
+      (isDone ? '<span class="ci-check">✓</span>' : '<span class="ci-go" style="color:var(--dim)">›</span>') + '</button>';
+  });
+  $("#cpCourses").innerHTML = html;
+  $$("#cpCourses .cp-course-item").forEach(function(b){
+    b.addEventListener("click", function(){ coachGo(COACH_COURSES[+b.getAttribute("data-course") - 1].from); });
   });
 }
+function coachEnterMenu(){
+  coachIdx = -1;
+  var hole = $("#coachHole"), pop = $("#coachPop"), hint = $("#coachHint");
+  hole.classList.remove("on");
+  hole.style.width = "0px"; hole.style.height = "0px";
+  hole.style.top = "50%"; hole.style.left = "50%";
+  hint.style.display = "none";
+  pop.classList.remove("top-side");
+  pop.style.bottom = "calc(24px + env(safe-area-inset-bottom))"; pop.style.top = "auto";
+  $("#cpTag").textContent = "系统教学 · 5 节课";
+  $("#cpStep").textContent = "目录";
+  $("#cpMenu").style.display = "none";
+  $("#cpPrev").style.display = "none";
+  $("#cpText").style.display = "none";
+  $("#cpCourses").style.display = "block";
+  renderCourses();
+  var done = coachDoneSet();
+  $("#cpNext").textContent = done.length === COACH_COURSES.length ? "看结业 ›" : (done.length ? "继续学习 ›" : "从第1课开始 ›");
+  buildDots();
+  document.body.style.overflow = "hidden";
+}
 function coachGo(i){
+  if(i === -1){ coachEnterMenu(); return; }
+  /* 离开旧位置时，若刚跨出一课的末步，标记该课完成 */
+  if(coachIdx >= 0){
+    var pc = coachStepCourse(coachIdx), nc = coachStepCourse(i);
+    if(pc > 0 && pc !== nc && i > coachIdx) coachMarkDone(pc);
+  }
   coachIdx = i;
   var step = COACH_STEPS[i];
   var hole = $("#coachHole"), pop = $("#coachPop"), hint = $("#coachHint");
-  $("#cpStep").textContent = (i + 1) + "/" + COACH_STEPS.length;
-  $("#cpPrev").style.display = i === 0 ? "none" : "";
-  $("#cpNext").textContent = step.next || "下一步 ›";
+  var c = coachStepCourse(i), meta = c ? COACH_COURSES[c - 1] : null;
+  $("#cpTag").textContent = c ? "第" + c + "课 · " + meta.t : (step.done ? "结业" : "开场");
+  $("#cpStep").textContent = c ? (i - meta.from + 1) + "/" + (meta.to - meta.from + 1) : (step.done ? "完" : "开场");
+  $("#cpMenu").style.display = c ? "" : "none";
+  $("#cpPrev").style.display = (c > 0 && i > meta.from) ? "" : "none";
+  $("#cpText").style.display = "";
+  $("#cpCourses").style.display = "none";
+  var lastOfCourse = c && i === meta.to;
+  $("#cpNext").textContent = step.next || (lastOfCourse ? (c < COACH_COURSES.length ? "下一课：" + COACH_COURSES[c].t + " ›" : "看结业 ›") : "下一步 ›");
   buildDots();
   document.body.style.overflow = "hidden";
   if(!step.sel){
@@ -2142,22 +2491,29 @@ function endCoach(markSeen){
   if(autoCoachTimer) clearTimeout(autoCoachTimer);
 }
 $("#cpNext").addEventListener("click", function(){
+  if(coachIdx === -1){
+    var t = firstUndoneCourse();
+    coachGo(t === -1 ? COACH_STEPS.length - 1 : t);
+    return;
+  }
   var step = COACH_STEPS[coachIdx];
   if(step.done){
     endCoach(true);
-    toast("教学完成 🎉 有事随时叫我，点右上角 ？ 再看一遍", 3200);
+    toast("教学完成 🎉 有事随时叫小潼，点右上角 ？ 挑任意一课重看", 3200);
     window.scrollTo({ top: 0, behavior: "smooth" });
   } else coachGo(coachIdx + 1);
 });
+$("#cpMenu").addEventListener("click", function(){ coachEnterMenu(); });
 $("#cpPrev").addEventListener("click", function(){ if(coachIdx > 0) coachGo(coachIdx - 1); });
 $("#cpSkip").addEventListener("click", function(){
   endCoach(true);
-  toast("已跳过教学 · 点右上角 ？ 随时重看", 2600);
+  toast("已跳过 · 点右上角 ？ 可挑任意一课重看", 2600);
 });
 $("#coach").addEventListener("click", function(ev){
   if(ev.target.id === "coach" || ev.target.id === "coachHole"){
+    if(coachIdx === -1) return;
     var step = COACH_STEPS[coachIdx];
-    if(step.done){ $("#cpNext").click(); } else { coachGo(Math.min(coachIdx + 1, COACH_STEPS.length - 1)); }
+    if(step.done){ $("#cpNext").click(); } else { coachGo(coachIdx + 1); }
   }
 });
 var autoCoachTimer = null;
@@ -2230,7 +2586,7 @@ function runDemo(){
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, 26600);
   dwait(function(){
-    spend(15);
+    spend(15, "🤖 秦文 · 团购文案（演示）");
     toast("⚡ 演示：秦文交付一条文案 · 本次消耗 15 算力 ≈ ¥1.5", 3200);
   }, 27800);
   dwait(function(){
@@ -2251,33 +2607,58 @@ $$("[data-close]").forEach(function(b){
   b.addEventListener("click", function(){ closeMask(b.getAttribute("data-close")); });
 });
 var TONG_REPLIES = [
-  { k:["积分","算力","充值","多少钱","扣","价格"], t:"平台唯一的货币叫「算力」，1 元 = 10 算力。智能体 0 元开通、不收月费，用一次按目录价扣算力 ⚡\n比如：秦文文案 15/次 ≈ ¥1.5、罗盘直播脚本 50/场、沈定 IP 全案 99/份。充值 100 元 = 1000 算力，充 300 加赠 600，充 1000 加赠 3000；用多少充多少，不用不花钱。" },
-  { k:["发内容","文案","写","稿子"], t:"发内容找「秦文 · 金牌文案主笔」✍️\n你把卖点甩给 TA，3 分钟给你一条能直接念、能直接发的稿子，复制就能发。" },
-  { k:["选题","拍什么","拍哪条","热点"], t:"拍什么找「何策 · 选题策略官」💡\n每天替你挑好 3–5 条能直接开拍的选题，还讲清为什么这条更容易火。" },
-  { k:["直播","开播","话术"], t:"直播找「罗盘」🎤 开播前排好逐字稿和节奏，你照着念就能上；\n播完再找「许复」🔁 做复盘，告诉你下场哪里要改。" },
-  { k:["复盘","数据","没流量","视频"], t:"视频没流量找「江流 · 流量诊断官」📊\n从播放、完播、互动、转化里找毛病，给出下一条怎么改的动作。" },
-  { k:["定位","人设","IP","起号"], t:"想清楚人设找「沈定 · 首席定位官」🎯\n先把「对谁说、说啥」想明白，再给你一份能直接用的定位全案。" },
-  { k:["成交","异议","客户","卡单","卖"], t:"客户卡单找「易成 · 首席成交官」🤝\n按场景给成交话术和异议处理脚本，客户卡在哪都能接住。" },
-  { k:["朋友圈","私域","社群"], t:"朋友圈找「周域 · 私域增长顾问」💬\n写能直接发的朋友圈，信任、业务价值、软引导三样都顾上。" },
-  { k:["OPC","折扣仓","漫剧","额度","算力"], t:"OPC 专区两个新品马上上架 📦\n「大模型折扣仓」主流大模型额度折扣直充，「AIGC 漫剧创作工作台」分镜到成片一条龙，AI 用量大的先关注。" },
-  { k:["硬件","录音","机器人","摄像头","音箱"], t:"AI 硬件货架两个新品在筹备 🎙️\n「AI 录音卡」录音即分析，「门店 AI 机器人」迎宾接待问答，上架了我会第一时间提醒你。" },
-  { k:["教学","怎么用","新手","不会","带我"], t:"点右上角「？」我可以再带你走一遍 30 秒教学 🎓\n或者直接告诉我你的场景，我帮你派单。" },
+  { k:["积分","算力","充值","多少钱","扣","价格"], t:"平台唯一的货币叫「算力」，1 元 = 10 算力。智能体 0 元开通、不收月费，用一次按目录价扣算力 ⚡\n比如：秦文文案 15/次 ≈ ¥1.5、罗盘直播脚本 50/场、沈定 IP 全案 99/份。充值 100 元 = 1000 算力，充 300 加赠 600，充 1000 加赠 3000；用多少充多少，不用不花钱。", act:{ label:"⚡ 去充值", type:"recharge" } },
+  { k:["发内容","文案","写","稿子"], t:"发内容找「秦文 · 金牌文案主笔」✍️\n你把卖点甩给 TA，3 分钟给你一条能直接念、能直接发的稿子，复制就能发。", act:{ label:"⚡ 找秦文开工", type:"emp", key:"copywriter" } },
+  { k:["选题","拍什么","拍哪条","热点"], t:"拍什么找「何策 · 选题策略官」💡\n每天替你挑好 3–5 条能直接开拍的选题，还讲清为什么这条更容易火。", act:{ label:"⚡ 找何策选题材", type:"emp", key:"topic" } },
+  { k:["直播","开播","话术"], t:"直播找「罗盘」🎤 开播前排好逐字稿和节奏，你照着念就能上；\n播完再找「许复」🔁 做复盘，告诉你下场哪里要改。", act:{ label:"⚡ 找罗盘排话术", type:"emp", key:"live-host" } },
+  { k:["复盘","数据","没流量","视频"], t:"视频没流量找「江流 · 流量诊断官」📊\n从播放、完播、互动、转化里找毛病，给出下一条怎么改的动作。", act:{ label:"⚡ 找江流诊断", type:"emp", key:"video-diag" } },
+  { k:["定位","人设","IP","起号"], t:"想清楚人设找「沈定 · 首席定位官」🎯\n先把「对谁说、说啥」想明白，再给你一份能直接用的定位全案。", act:{ label:"⚡ 找沈定做定位", type:"emp", key:"ip-position" } },
+  { k:["成交","异议","客户","卡单","卖"], t:"客户卡单找「易成 · 首席成交官」🤝\n按场景给成交话术和异议处理脚本，客户卡在哪都能接住。", act:{ label:"⚡ 找易成咨询", type:"emp", key:"sales-coach" } },
+  { k:["朋友圈","私域","社群"], t:"朋友圈找「周域 · 私域增长顾问」💬\n写能直接发的朋友圈，信任、业务价值、软引导三样都顾上。", act:{ label:"⚡ 找周域写圈", type:"emp", key:"private" } },
+  { k:["OPC","折扣仓","漫剧","额度"], t:"OPC 专区两个新品马上上架 📦\n「大模型折扣仓」主流大模型额度折扣直充，「AIGC 漫剧创作工作台」分镜到成片一条龙，AI 用量大的先关注。", act:{ label:"📦 去 OPC 专区看看", type:"floor", key:"#floor-opc" } },
+  { k:["硬件","录音","机器人","摄像头","音箱"], t:"AI 硬件货架两个新品在筹备 🎙️\n「AI 录音卡」录音即分析，「门店 AI 机器人」迎宾接待问答，上架了我会第一时间提醒你。", act:{ label:"🎙️ 去硬件货架看看", type:"floor", key:"#floor-hardware" } },
+  { k:["教学","怎么用","新手","不会","带我"], t:"教学已经升级成 5 节系统课了 🎓（认识商城 / 智能体派单 / 算力充值 / 加购订单 / 签到邀请）\n点右上角「？」进课程目录，挑想听的课听；也可以直接告诉我你的场景，我帮你派单。", act:{ label:"🎓 开始系统课", type:"course" } },
   { k:["你好","在吗","您好","hi","hello","你是谁"], t:"在的在的 🙋 我是管家小潼。\n直接说事：「今天要发内容」「刚直播完」「不知道拍什么」，我帮你派最合适的员工。" }
 ];
 var TONG_DEFAULT = "收到！这个场景我说不准谁最合适 🙈\n你可以换个说法，比如：发内容 / 选题 / 直播 / 复盘 / 定位 / 成交，或者直接点员工卡派单。";
 var TONG_CHIPS = ["今天要发内容","算力怎么算","直播怎么安排","带我看教学"];
+/* 应答直达：点按钮一键去对应智能体 / 楼层 / 充值 / 教学 */
+function tongActGo(act){
+  closeMask("tongMask");
+  if(DEMO.on) stopDemo();
+  if(act.type === "recharge"){ $("#rcMask").classList.add("show"); return; }
+  if(act.type === "course"){
+    switchTab("home", document.querySelector('.tab[data-tab="home"]'));
+    setTimeout(startCoach, 400);
+    return;
+  }
+  if(act.type === "floor"){
+    var f = $(act.key);
+    if(f){
+      f.scrollIntoView({ behavior: "smooth", block: "start" });
+      f.classList.add("spotlight");
+      setTimeout(function(){ f.classList.remove("spotlight"); }, 1800);
+    }
+    return;
+  }
+  if(act.type === "emp"){
+    var DK = { "ip-position":1, "copywriter":1, "video-diag":1, "topic":1, "live-host":1, "live-coach":1, "sales-coach":1, "private":1 };
+    if(DK[act.key]){ location.href = "agent-product-detail-demo-20260923.html?agent=" + act.key + "&v=12"; return; }
+    if($("#emp-" + act.key)) openModal(act.key);
+  }
+}
 function tongReply(v){
   var q = v.toLowerCase();
   for(var i = 0; i < TONG_REPLIES.length; i++){
     var r = TONG_REPLIES[i];
     for(var j = 0; j < r.k.length; j++){
-      if(q.indexOf(r.k[j]) > -1) return r.t;
+      if(q.indexOf(r.k[j]) > -1) return { t: r.t, act: r.act };
     }
   }
-  return TONG_DEFAULT;
+  return { t: TONG_DEFAULT };
 }
 function tongOpen(){
-  closeMask("meMask");
+  $("#meView").classList.remove("show");
   var tip = $("#avaTip");
   if(tip) tip.style.display = "none";
   $("#tongMask").classList.add("show");
@@ -2302,20 +2683,45 @@ function tongOpen(){
 function tongSendMsg(){
   var inp = $("#tongInput"), v = inp.value.trim();
   if(!v){ toast("先输入你想问小潼的问题"); return; }
-  $("#tongMeTxt").textContent = v;
-  $("#tongMeBubble").style.display = "flex";
   $("#tongChips").style.display = "none";
   inp.value = "";
   var zone = $("#tongChat");
+  var inputRow = zone.querySelector(".chat-input");
+  /* 用户消息行：追加到对话区末尾（输入框上方），保证「提问在上、回答在下」 */
+  var urow = document.createElement("div");
+  urow.className = "me-bubble";
+  urow.style.display = "flex";
+  var ub = document.createElement("span");
+  ub.className = "bubble";
+  ub.textContent = v;
+  var ua = document.createElement("span");
+  ua.className = "chat-ava";
+  ua.style.cssText = "background:rgba(255,122,26,.15);border-color:rgba(255,122,26,.4)";
+  ua.textContent = "🙋";
+  urow.appendChild(ub); urow.appendChild(ua);
+  zone.insertBefore(urow, inputRow);
+  urow.scrollIntoView({ behavior: "smooth", block: "nearest" });
   setTimeout(function(){
     var row = document.createElement("div");
     row.className = "chat-row";
     row.style.marginTop = "10px";
     row.innerHTML = '<span class="chat-ava">🤖</span><span class="bubble"></span>';
-    zone.insertBefore(row, $("#tongChips").nextSibling);
+    zone.insertBefore(row, urow.nextSibling); /* 回复插在用户消息下面 */
     var bb = row.querySelector(".bubble");
-    typewriter(bb, tongReply(v), 20, function(){
-      $("#tongChips").style.display = "flex";
+    var rep = tongReply(v);
+    typewriter(bb, rep.t, 20, function(){
+      if(rep.act){
+        var ab = document.createElement("button");
+        ab.type = "button"; ab.className = "chat-go"; ab.textContent = rep.act.label;
+        ab.addEventListener("click", function(){ tongActGo(rep.act); });
+        var wrap = document.createElement("div");
+        wrap.style.margin = "7px 0 0 34px";
+        wrap.appendChild(ab);
+        zone.insertBefore(wrap, row.nextSibling);
+      }
+      var chips = $("#tongChips");
+      zone.insertBefore(chips, inputRow); /* 快捷问题始终压到输入框上方 */
+      chips.style.display = "flex";
       row.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   }, 420);
@@ -2343,18 +2749,11 @@ var pOkN = EMPLOYEES.filter(function(e){ return e.ok && !CONTENT_KEYS[e.key]; })
 $("#empOnline2").textContent = pOkN;
 if(!pOkN) $("#empOnline2").parentElement.style.display = "none";
 
-/* ================= 广告轮播（内容待接） ================= */
-var adTrack = $("#adTrack"), adDots = $("#adDots").children, adIdx = 0;
-function adGo(n){
-  adIdx = (n + adDots.length) % adDots.length;
-  adTrack.scrollTo({ left: adIdx * adTrack.clientWidth, behavior: "smooth" });
-  for(var i = 0; i < adDots.length; i++) adDots[i].classList.toggle("on", i === adIdx);
-}
-adTrack.addEventListener("scroll", function(){
-  var i = Math.round(adTrack.scrollLeft / adTrack.clientWidth);
-  if(i !== adIdx){ adIdx = i; for(var k = 0; k < adDots.length; k++) adDots[k].classList.toggle("on", k === adIdx); }
+/* ================= 广告位（当前仅邀约有礼，多屏轮播待后续内容） ================= */
+$("#adInvBtn").addEventListener("click", function(){
+  if(DEMO.on) stopDemo();
+  $("#invMask").classList.add("show");
 });
-setInterval(function(){ adGo(adIdx + 1); }, 4000);
 </script>
 </body>
 </html>
